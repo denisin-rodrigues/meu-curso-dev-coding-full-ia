@@ -1,0 +1,38 @@
+# Dependências
+node_modules/
+.pnp/
+.pnp.js
+vendor/
+
+# Build / saída
+dist/
+build/
+out/
+*.log
+
+# Ambiente / segredos
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Cache de ferramentas
+.cache/
+.parcel-cache/
+.next/
+.turbo/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
