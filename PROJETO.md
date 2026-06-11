@@ -35,6 +35,7 @@
 | 2 | **Cheatsheet de Animação Premium** — regras de motion | Código dos 4 projetos | [ ] A extrair |
 | 3 | **4 Estudos de Caso** — aulas referência → processo → resultado | Os 4 sites prontos | [ ] A produzir |
 | 4 | **Checklist Método VibeCoding** — passo a passo replicável | Workflow do autor | [ ] A documentar |
+| 5 | **Kit Memória de Dev** — registro automático de prompts/decisões por projeto | Design 2026-06-10 | [x] Pronto (`metodo/memoria-dev/`) |
 
 ---
 
@@ -85,7 +86,10 @@ Construção de UM site premium do zero, aplicando as 5 etapas do método.
 │   ├── projeto-03/README.md
 │   └── projeto-04/README.md
 └── metodo/
-    └── checklist-vibecoding.md
+    ├── checklist-vibecoding.md
+    └── memoria-dev/            ← kit de registro automático (copiar p/ cada projeto)
+        ├── COMO-USAR.md
+        └── template/           ← AGENTS.md · CLAUDE.md · DEV-LOG.md · PROMPTS.md
 ```
 
 ---
@@ -111,6 +115,12 @@ Construção de UM site premium do zero, aplicando as 5 etapas do método.
 ### Fase 4 — Lançamento
 - [ ] Página de vendas
 - [ ] Estratégia de lançamento
+
+### Fase 5 — Plataforma inteligente (norte futuro, pós-lançamento)
+> Depende do acúmulo de DEV-LOGs gerados pelo Kit Memória de Dev (`metodo/memoria-dev/`).
+- [ ] **Fase B — RAG sobre os logs:** indexar os DEV-LOGs (~10+) para consulta semântica
+- [ ] **Fase C — Agente tutor na área de membros:** IA (LangChain/LangGraph) que responde
+      dúvidas dos alunos com base no processo real registrado nos logs — terá spec próprio
 
 ---
 

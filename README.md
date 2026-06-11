@@ -25,8 +25,15 @@ método replicável validado em 4 projetos reais.
 ├── prompt-vault/         # biblioteca de prompts (hero, scroll, design, polish)
 ├── cheatsheets/          # regras de animação e design premium
 ├── estudos-de-caso/      # os 4 projetos reais: referência → processo → resultado
-└── metodo/               # checklist replicável do VibeCoding
+└── metodo/               # checklist replicável + Kit Memória de Dev
 ```
+
+## 🧠 Kit Memória de Dev
+
+Cada projeto novo recebe uma cópia de [`metodo/memoria-dev/template/`](metodo/memoria-dev/template/):
+a IA (Claude Code, Codex ou Antigravity) passa a **registrar sozinha** o processo —
+prompts, decisões e iterações — em `DEV-LOG.md` e `PROMPTS.md`.
+Veja [`metodo/memoria-dev/COMO-USAR.md`](metodo/memoria-dev/COMO-USAR.md).
 
 ## 🚦 Por onde começar
 
