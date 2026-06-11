@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, type ReactNode } from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 
 interface Props {
   readonly children: ReactNode;
@@ -17,6 +17,11 @@ export class CanvasErrorBoundary extends Component<Props, State> {
 
   static getDerivedStateFromError(): State {
     return { hasError: true };
+  }
+
+  override componentDidCatch(error: Error, info: ErrorInfo): void {
+    // Ponto para encaminhar a erro-reporter (ex: Sentry) no futuro.
+    console.error("[CanvasErrorBoundary]", error, info.componentStack);
   }
 
   override render(): ReactNode {
