@@ -56,3 +56,38 @@ intermediária (`IcosahedronGeometry` órfã sem `dispose()`), um `componentDidC
 no error boundary e um `lang="en"` indevido num projeto pt-BR — os três corrigidos.
 
 **Prompt reutilizável:** não (setup de fundação, não prompt de geração visual).
+
+## 2026-06-11 — Bola Jordan 3D (build inicial)
+
+**Pedido:** Construir uma bola de basquete Jordan 3D fotorrealista e interativa, com
+texturas PBR geradas por código (albedo, normal, roughness), decal do Jumpman, palco de
+estúdio com iluminação HDRI e pós-processamento.
+
+**O que foi feito:** (1) Gerador procedural de texturas (`scripts/gen-textures.mjs`) usando
+sharp — albedo com base `#56B4C3` + elephant print (Worley) + gomos `#FFFAF4`, normal com
+granulado (fBm) + ranhuras dos gomos, roughness variável. (2) Script de recolor do decal
+(`scripts/gen-decal.mjs`) — silhueta do Jumpman recolorida para `#FFFAF4` preservando
+alpha. (3) Config tipada Zod (`src/schemas/basketball.schema.ts`) com testes TDD e conteúdo
+validado em runtime (`src/content/basketball.ts`). (4) Hook de carregamento de texturas com
+color space correto (`src/three/materials/basketballTextures.ts`). (5) Componente da bola
+(`src/three/scene/Basketball.tsx`) — esfera 128-seg com material PBR + `<Decal>` do Jumpman
++ auto-giro. (6) Palco de estúdio (`src/three/scene/BasketballExperience.tsx`) — Canvas
+R3F, `<Environment preset="studio">`, `<ContactShadows>`, `<OrbitControls>` com auto-rotate
+e inércia, Bloom + SMAA via `<EffectComposer>`. (7) Home apontada para
+`BasketballExperience`; cena-prova da fundação removida (Experience, RotatingBox,
+wireframeGlobe).
+
+**Decisões e porquês:** Texturas geradas proceduralmente em vez de download CC0+recolor
+para controle total de alinhamento gomo↔normal e reprodutibilidade determinística. Sem
+`aoMap` separado (oclusão assada diretamente no albedo) para evitar a pegadinha
+`uv2`→`uv1` do three r151+. Pós-processamento: Bloom+SMAA (SSAO fica como polish futuro).
+Non-null assertions (`!`) no hook de texturas porque drei garante carregamento dentro de
+Suspense.
+
+**Iterações:** `tsc --noEmit` pegou tipos `Texture | undefined` no retorno array do
+`useTexture` do drei — corrigido com non-null assertions. Todos os 4 testes (content +
+basketball schemas) passando.
+
+**Prompt reutilizável:** sim — padrão "gerador procedural de texturas PBR com sharp" (ver
+`scripts/gen-textures.mjs` como template).
+

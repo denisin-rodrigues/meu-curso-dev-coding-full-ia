@@ -1,57 +1,146 @@
-// Gera albedo/normal/roughness da bola Jordan, 100% por codigo (deterministico).
-// Base #56B4C3 + elephant print (Worley) + gomos #FFFAF4 (assados no albedo e no normal).
+// Gera albedo/normal/roughness da bola Jordan (Biomimetic Puffy Domes)
 import sharp from "sharp";
 import { mkdir } from "node:fs/promises";
 
 const S = 1024;
 const OUT = "public/textures/basketball";
-const BASE = [0x56, 0xb4, 0xc3];   // #56B4C3
-const CELL = [0x8f, 0xd6, 0xdf];   // celulas claras do elephant print
-const ACC  = [0xff, 0xfa, 0xf4];   // #FFFAF4 (gomos)
+
+// Cores "Ice-Blue" Vibrantes baseadas no Blueprint Zoom
+const BASE_DARK  = [0x1a, 0x5a, 0x75]; // Cracks profundas e foscas
+const BASE_LIGHT = [0x55, 0xbb, 0xd4]; // Topo celular brilhante
+const ACC        = [0xff, 0xff, 0xff]; 
 
 function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const rng = mulberry32(20260611);
 
-// --- value-noise tilavel (fBm) p/ granulado ---
-function makeGrid(G){const g=new Float32Array(G*G);for(let i=0;i<g.length;i++)g[i]=rng();return g;}
-const GRIDS = [16,32,64,128].map(G=>({G,g:makeGrid(G)}));
-const smooth = t => t*t*(3-2*t);
-function sample(g,G,u,v){
-  const x=u*G,y=v*G,x0=Math.floor(x),y0=Math.floor(y);
-  const fx=smooth(x-x0),fy=smooth(y-y0);
-  const X0=((x0%G)+G)%G,Y0=((y0%G)+G)%G,X1=(X0+1)%G,Y1=(Y0+1)%G;
-  const a=g[Y0*G+X0],b=g[Y0*G+X1],c=g[Y1*G+X0],d=g[Y1*G+X1];
-  return (a*(1-fx)+b*fx)*(1-fy)+(c*(1-fx)+d*fx)*fy;
+// --- Packed Polygonal Puffy Cells (Jittered Grid) ---
+// O segredo do "Couro Vivo": O grid de células É a própria textura. Sem noise extra.
+const GRID_W = 160; 
+const GRID_H = 160; // 25.600 células super densas
+const PTS = [];
+const jitter = 0.65; // Suficiente para criar hexágonos/pentágonos orgânicos
+for (let y = 0; y < GRID_H; y++) {
+  for (let x = 0; x < GRID_W; x++) {
+    const px = (x + 0.5 + (rng() - 0.5) * jitter) / GRID_W;
+    const py = (y + 0.5 + (rng() - 0.5) * jitter) / GRID_H;
+    PTS.push([px, py]);
+  }
 }
-function fbm(u,v){let s=0,amp=0.5,sum=0;for(const{G,g} of GRIDS){s+=amp*sample(g,G,u,v);sum+=amp;amp*=0.5;}return s/sum;}
 
-// --- Worley (F1,F2) tilavel p/ elephant print ---
-const NP=150, PTS=[];
-for(let i=0;i<NP;i++)PTS.push([rng(),rng()]);
-function worley(u,v){let f1=9,f2=9;for(const[px,py]of PTS){let dx=Math.abs(u-px);dx=Math.min(dx,1-dx);let dy=Math.abs(v-py);dy=Math.min(dy,1-dy);const d=dx*dx+dy*dy;if(d<f1){f2=f1;f1=d;}else if(d<f2)f2=d;}return[Math.sqrt(f1),Math.sqrt(f2)];}
+// Otimização de busca
+const GS = 60;
+const GC = new Array(GS*GS).fill(null).map(()=>[]);
+for(let i=0;i<PTS.length;i++){
+  const gx=Math.max(0, Math.min(GS-1, Math.floor(PTS[i][0]*GS)));
+  const gy=Math.max(0, Math.min(GS-1, Math.floor(PTS[i][1]*GS)));
+  GC[gy*GS+gx].push(i);
+}
 
-// --- gomos: distancia as costuras (4 meridianos + equador) -> aproximacao paneled ---
+function worley(u,v){
+  let f1=9, f2=9;
+  const gx=Math.floor(u*GS), gy=Math.floor(v*GS);
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+    const cx=((gx+dx)%GS+GS)%GS,cy=((gy+dy)%GS+GS)%GS;
+    for(const idx of GC[cy*GS+cx]){
+      const [px,py]=PTS[idx];
+      let ddx=Math.abs(u-px);ddx=Math.min(ddx,1-ddx);
+      let ddy=Math.abs(v-py);ddy=Math.min(ddy,1-ddy);
+      const d = Math.sqrt(ddx*ddx+ddy*ddy);
+      if(d<f1){f2=f1;f1=d;}else if(d<f2)f2=d;
+    }
+  }
+  return [f1, f2];
+}
+
+// --- Costuras Clássicas ---
 function seam(u,v){
   let d=1;
-  for(const mu of [0,0.25,0.5,0.75]){let du=Math.abs(u-mu);du=Math.min(du,1-du);if(du<d)d=du;}
-  const de=Math.abs(v-0.5); if(de<d)d=de;
-  const w=0.013;                       // meia-largura da costura
-  return Math.max(0,1-d/w);            // 1 no centro da costura, 0 longe
+  const curve = Math.sin(v * Math.PI) * 0.15;
+  for(const mu of [0.0, 0.5]){
+    let du=Math.abs(u - mu - curve); du=Math.min(du,1-du);
+    if(du<d) d=du;
+    let du2=Math.abs(u - mu + curve - 0.25); du2=Math.min(du2,1-du2);
+    if(du2<d) d=du2;
+  }
+  const de=Math.abs(v-0.5);if(de<d)d=de;
+  const w=0.005, edge=0.002;
+  if(d<w)return 1;if(d<w+edge)return 1-(d-w)/edge;return 0;
 }
+
 const lerp=(a,b,t)=>a+(b-a)*t;
 const mix3=(A,B,t)=>[lerp(A[0],B[0],t),lerp(A[1],B[1],t),lerp(A[2],B[2],t)];
+const clamp=(x,lo=0,hi=255)=>Math.max(lo,Math.min(hi,x));
 
-// --- 1) campo de altura (granulado - groove das costuras) ---
-const H=new Float32Array(S*S);
-for(let y=0;y<S;y++)for(let x=0;x<S;x++){
-  const u=x/S,v=y/S;
-  const pebble=fbm(u*1,v*1)*0.5 + fbm(u*2,v*2)*0.5; // granulado multi-escala
-  const groove=seam(u,v);
-  H[y*S+x]=pebble*0.6 - groove*1.0;   // costuras afundam
+// --- Carregar Logo ---
+console.log("carregando logo jumpman duplo...");
+const logoSrc = sharp("public/decals/jumpman-white.png");
+const logoMeta = await logoSrc.metadata();
+
+const LOGO_SCALE = 0.08; 
+const LOGO_W = Math.round(S * LOGO_SCALE);
+const LOGO_H = Math.round(LOGO_W * (logoMeta.height / logoMeta.width));
+const LOGO_CX = Math.round(S * 0.375); // Eixo X matemático do centro do painel frontal largo
+// Aproximando as logos da costura central (equador v=0.5) para corrigir a distorção esférica
+// e fazer o "match" visual com o Blueprint (onde as logos flutuam mais perto do meio)
+const LOGO_CY_TOP = Math.round(S * 0.35); // Antes 0.25 (muito alto no polo)
+const LOGO_CY_BOT = Math.round(S * 0.65); // Antes 0.75 (muito baixo no polo)
+
+const logoResized = await logoSrc
+  .resize(LOGO_W, LOGO_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true });
+
+const logoPx = logoResized.data;
+const logoW = logoResized.info.width;
+const logoH = logoResized.info.height;
+const logoCh = logoResized.info.channels;
+
+function logoAlpha(px, py) {
+  const lx = px - (LOGO_CX - Math.floor(logoW / 2));
+  
+  // Verifica logo superior
+  const lyTop = py - (LOGO_CY_TOP - Math.floor(logoH / 2));
+  if (lx >= 0 && lx < logoW && lyTop >= 0 && lyTop < logoH) {
+    return logoPx[(lyTop * logoW + lx) * logoCh + 3] / 255; 
+  }
+
+  // Verifica logo inferior
+  const lyBot = py - (LOGO_CY_BOT - Math.floor(logoH / 2));
+  if (lx >= 0 && lx < logoW && lyBot >= 0 && lyBot < logoH) {
+    return logoPx[(lyBot * logoW + lx) * logoCh + 3] / 255; 
+  }
+
+  return 0; 
 }
 
-// --- 2) normal a partir da altura (diferencas centrais, tilavel em u) ---
-const STR=2.2;
+// --- 1) Campo de Altura (Puffy Domes Cross-Section) ---
+console.log("gerando geometria das celulas pufadas...");
+const H=new Float32Array(S*S);
+const NORMALIZED_FACTOR = GRID_W * 0.9; // Para normalizar a distância (0.0 até ~1.0)
+
+for(let y=0;y<S;y++)for(let x=0;x<S;x++){
+  const u=x/S, v=y/S;
+  
+  const [f1, f2] = worley(u,v);
+  
+  // Distância até a borda exata do polígono
+  const distToEdge = f2 - f1;
+  const normDist = clamp(distToEdge * NORMALIZED_FACTOR, 0.0, 1.0);
+  
+  // A Mágica: Math.pow(x, 0.45) gera uma curva perfeitamente convexa (Puffy Dome/Pillow)
+  // A borda cai abruptamente (crack), mas o topo é arredondado suavemente.
+  const cellHeight = Math.pow(normDist, 0.45); 
+  
+  // O logo não muda o height map do couro, apenas a cor
+  const s = seam(u,v);
+  // Extrusão leve (0.15). Nas costuras afunda para -0.2
+  H[y*S+x] = lerp(cellHeight * 0.15, -0.2, s);
+}
+
+// --- 2) Normal map ---
+console.log("gerando normal map de alta reatividade...");
+const STR = 4.0; // Puxa fortemente as encostas das células
 const normalBuf=Buffer.alloc(S*S*3);
 const at=(x,y)=>H[(((y%S)+S)%S)*S+(((x%S)+S)%S)];
 for(let y=0;y<S;y++)for(let x=0;x<S;x++){
@@ -64,27 +153,48 @@ for(let y=0;y<S;y++)for(let x=0;x<S;x++){
   normalBuf[i+2]=Math.round((nz*0.5+0.5)*255);
 }
 
-// --- 3) albedo + roughness ---
+// --- 3) Albedo + Roughness ---
+console.log("iluminando domes para reflexo de couro vivo...");
 const albedoBuf=Buffer.alloc(S*S*3);
 const roughBuf=Buffer.alloc(S*S);
 for(let y=0;y<S;y++)for(let x=0;x<S;x++){
-  const u=x/S,v=y/S;
-  const [f1,f2]=worley(u,v);
-  const cellMix=Math.min(1,f1*6);            // interior da celula mais claro
-  const crack=Math.max(0,1-(f2-f1)*40);      // bordas escuras (craquelado)
-  let col=mix3(BASE,CELL,cellMix*0.8);
-  col=mix3(col,[col[0]*0.7,col[1]*0.7,col[2]*0.7],crack*0.5);
-  const s=seam(u,v);
-  col=mix3(col,ACC,s);                        // gomos brancos
-  // AO assado: leve escurecimento nas bordas das celulas (craquelado)
-  col=mix3(col,[col[0]*0.85,col[1]*0.85,col[2]*0.85],crack*0.3);
+  const u=x/S, v=y/S;
+  const [f1, f2] = worley(u,v);
+  const normDist = clamp((f2 - f1) * NORMALIZED_FACTOR, 0.0, 1.0);
+  const cellHeight = Math.pow(normDist, 0.45);
+  
+  const s = seam(u,v);
+  
+  // Cracks profundas = cor base dark. Topo das células = cor vibrante.
+  let col = mix3(BASE_DARK, BASE_LIGHT, cellHeight * 0.8 + 0.2);
+
+  col=mix3(col,ACC,s); // Costuras brancas
+
+  // Embossed Logo
+  const la = logoAlpha(x, y);
+  if (la > 0) {
+    col = mix3(col, ACC, la);
+  }
+
   const i3=(y*S+x)*3;
-  albedoBuf[i3]=Math.round(col[0]);albedoBuf[i3+1]=Math.round(col[1]);albedoBuf[i3+2]=Math.round(col[2]);
-  roughBuf[y*S+x]=Math.round((0.62 - s*0.15 + (fbm(u*4,v*4)-0.5)*0.1)*255);
+  albedoBuf[i3]=clamp(Math.round(col[0]));
+  albedoBuf[i3+1]=clamp(Math.round(col[1]));
+  albedoBuf[i3+2]=clamp(Math.round(col[2]));
+
+  // O SEGREDO DO COURO VIVO:
+  // As rachaduras (0.0) são completamente foscas (0.8) absorvendo luz.
+  // O topo da célula (1.0) é brilhante (0.35) refletindo especular.
+  const baseRough = lerp(0.85, 0.35, cellHeight); 
+  let rough = lerp(baseRough, 0.4, s); // Costuras brancas
+  rough = lerp(rough, 0.45, la); // Logo jumpman
+  
+  roughBuf[y*S+x]=clamp(Math.round(rough*255));
 }
 
+// --- Exportar ---
+console.log("salvando texturas Biomimetic Domes...");
 await mkdir(OUT,{recursive:true});
-await sharp(albedoBuf,{raw:{width:S,height:S,channels:3}}).jpeg({quality:92}).toFile(`${OUT}/albedo.jpg`);
-await sharp(normalBuf,{raw:{width:S,height:S,channels:3}}).jpeg({quality:95}).toFile(`${OUT}/normal.jpg`);
-await sharp(roughBuf,{raw:{width:S,height:S,channels:1}}).jpeg({quality:92}).toFile(`${OUT}/roughness.jpg`);
-console.log("texturas geradas em", OUT);
+await sharp(albedoBuf,{raw:{width:S,height:S,channels:3}}).jpeg({quality:100}).toFile(`${OUT}/albedo.jpg`);
+await sharp(normalBuf,{raw:{width:S,height:S,channels:3}}).jpeg({quality:100}).toFile(`${OUT}/normal.jpg`);
+await sharp(roughBuf,{raw:{width:S,height:S,channels:1}}).jpeg({quality:100}).toFile(`${OUT}/roughness.jpg`);
+console.log("✅ Texturas concluídas e salvas em", OUT);

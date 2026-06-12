@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Anybody, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontAnybody = Anybody({
+  variable: "--font-anybody",
   subsets: ["latin"],
+  weight: ["400", "700", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontHanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Laboratório 3D — DEV CODING FULL IA",
-  description: "Fundação do site premium com Three.js (laboratório do curso)",
+  title: "Court Elite — Official Game Ball",
+  description: "The Standard of Excellence in professional basketball equipment.",
 };
 
 export default function RootLayout({
@@ -24,10 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="en"
+      className={`${fontAnybody.variable} ${fontHanken.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-hanken bg-background text-foreground overflow-x-hidden" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
