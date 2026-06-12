@@ -19,6 +19,14 @@ de usar/alterar API do Three.js. Regras:
   com WebGPU/WebXR). No R3F, isso é o `useFrame`.
 - Shaders modernos: TSL / WebGPURenderer (ver skill `webgpu-threejs-tsl`).
 
+## 🚀 START obrigatório — criação de objeto 3D
+
+Quando o usuário pedir para **criar ou replicar um objeto 3D novo** (qualquer
+variação: "quero criar um objeto 3D", "faz um(a) X em 3D", "replica essa foto"),
+siga `docs/START.md` desde a Etapa 0, respeitando os portões de saída de cada
+etapa. **Nenhum código antes do Portão 1** (plano aprovado pelo usuário).
+Ajustes em objetos já existentes não disparam o START — só criação nova.
+
 ## 🧬 Inteligência de Materiais (obrigatória em tarefas de textura/material)
 
 Antes de **gerar, alterar ou refinar** qualquer textura ou material (PBR, shaders,
