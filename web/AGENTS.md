@@ -19,6 +19,19 @@ de usar/alterar API do Three.js. Regras:
   com WebGPU/WebXR). No R3F, isso é o `useFrame`.
 - Shaders modernos: TSL / WebGPURenderer (ver skill `webgpu-threejs-tsl`).
 
+## 🧬 Inteligência de Materiais (obrigatória em tarefas de textura/material)
+
+Antes de **gerar, alterar ou refinar** qualquer textura ou material (PBR, shaders,
+scripts de geração), leia `docs/MATERIAIS.md`. Ele contém a física, os erros comuns
+(anti-referências) e os parâmetros já validados de cada material — conhecimento pago
+com muitas iterações; não o redescubra.
+
+- Para **material novo**: siga o Protocolo de Documentação Visual do MATERIAIS.md
+  (vistas ortográficas, medidas, ampliações de superfície) ANTES de gerar textura.
+  Referência visual estruturada > descrição textual — validado no Projeto 01.
+- Após o usuário **validar** um material: registre a nova seção no MATERIAIS.md
+  (física, erros observados, correções, parâmetros finais). Sem o usuário pedir.
+
 ## 🧱 Tipagem forte (obrigatória)
 
 - Proibido `any`. Use `unknown` + narrowing quando o tipo for incerto.

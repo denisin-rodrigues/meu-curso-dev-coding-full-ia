@@ -91,3 +91,32 @@ basketball schemas) passando.
 **Prompt reutilizável:** sim — padrão "gerador procedural de texturas PBR com sharp" (ver
 `scripts/gen-textures.mjs` como template).
 
+## 2026-06-12 — Aprendizado-chave: documentação visual > texto para materiais
+
+**Pedido:** Relato do autor sobre o processo da textura da bola: muitas iterações até o
+couro esportivo ficar fiel à referência, e a pergunta — o aprendizado está sendo
+preservado entre sessões ou reconstruído a cada vez?
+
+**O que foi feito:** Criada a base de conhecimento `docs/MATERIAIS.md` (inteligência de
+materiais): física do couro pebbled, anti-referências (erros recorrentes do gerador),
+parâmetros validados e o Protocolo de Documentação Visual. Adicionada regra no
+`AGENTS.md` tornando a leitura do MATERIAIS.md obrigatória em qualquer tarefa de
+textura/material, e o registro de materiais validados automático.
+
+**Decisões e porquês:** O maior custo do projeto não foi geometria, foi convergir a
+textura — e esse custo se repetiria em todo material novo sem memória dedicada.
+Arquivo markdown lido por regra (e não RAG/base vetorial) porque o corpus ainda é
+pequeno; RAG é a Fase B do roadmap do curso e só se paga com mais volume.
+
+**Iterações (o aprendizado em si):** (1) O gerador interpretava "couro granulado" como
+escamas, pedras ou estrutura orgânica — corrigido com escala de célula menor, relevo
+achatado e roughness alta variável. (2) Aumentar a quantidade de prompts de texto NÃO
+melhorou o resultado. (3) O salto de qualidade veio de imagens de apoio técnicas:
+vistas ortográficas, medidas/proporções, ampliações da superfície, estudos do material
+e padrões geométricos — documentação visual estruturada como contexto. (4) Quanto mais
+contexto visual sobre o material, melhor a fidelidade — para objetos dependentes de
+superfície, referência visual vale mais que descrição.
+
+**Prompt reutilizável:** não (marco de processo/conhecimento) — mas o Protocolo de
+Documentação Visual do `docs/MATERIAIS.md` é o template a seguir em todo material novo.
+
