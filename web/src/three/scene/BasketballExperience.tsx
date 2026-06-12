@@ -51,8 +51,13 @@ function Ball() {
       .to(gsapRef.current.scale, { x: 0.75, y: 0.75, z: 0.75, ease: "power2.inOut" }, 1)
       .to(gsapRef.current.rotation, { z: Math.PI / 6, x: Math.PI / 8, ease: "power2.inOut" }, 1);
 
-    tl.to(gsapRef.current.position, { x: 0, y: 0, z: 0, ease: "power2.inOut" }, 2)
-      .to(gsapRef.current.scale, { x: 1.1, y: 1.1, z: 1.1, ease: "power2.inOut" }, 2)
+    // Transição para Section 4: O Arremesso! (Levanta a bola primeiro)
+    tl.to(gsapRef.current.position, { x: 0, y: 2.5, z: 0, ease: "power1.inOut" }, 1.5)
+      .to(gsapRef.current.scale, { x: 0.9, y: 0.9, z: 0.9, ease: "power1.inOut" }, 1.5);
+
+    // Cai na cesta no final
+    tl.to(gsapRef.current.position, { x: 0, y: -0.3, z: -0.5, ease: "power2.in" }, 2)
+      .to(gsapRef.current.scale, { x: 0.8, y: 0.8, z: 0.8, ease: "power2.inOut" }, 2)
       .to(gsapRef.current.rotation, { z: 0, x: 0, ease: "power2.inOut" }, 2);
 
   }); // Sem { scope: ref } para o ScrollTrigger conseguir achar o "body" no DOM real

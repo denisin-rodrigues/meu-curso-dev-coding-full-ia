@@ -14,7 +14,19 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-deep-shadow/90 via-deep-shadow/60 to-transparent"></div>
         </div>
-        {/* O fundo das outras seções é transparente, mostrando a cor base do site */}
+        
+        {/* O fundo das seções 2 e 3 é transparente */}
+        <div className="h-screen w-full"></div>
+        <div className="h-screen w-full"></div>
+
+        {/* Fundo da Section 4 (Shop) - Tabela e Cesta */}
+        <div 
+          className="relative h-screen w-full bg-cover bg-bottom"
+          style={{ backgroundImage: "url('/images/hoop-bg.png')" }}
+        >
+          {/* Overlay sutil para não ofuscar a bola e o botão */}
+          <div className="absolute inset-0 bg-deep-shadow/20"></div>
+        </div>
       </div>
 
       {/* --- CAMADA 2: 3D CANVAS FIXO (z-10) --- */}
