@@ -63,6 +63,13 @@ validado de "1 progresso scrubado + waypoints". Conhecimento caro; não redescub
   `src/three/primitives/`, montado na cena via `<primitive object={...} />`.
 - Não misture as duas abordagens no mesmo arquivo.
 
+## 🎯 Disciplina de escopo — NÃO modifique o que não foi pedido
+
+Altere **apenas** o que o pedido do usuário abrange. Não "melhore", recolora,
+re-gere texturas, troque logos ou refatore objetos/arquivos fora do escopo — mesmo
+que pareçam imperfeitos. Se notar algo que merece correção fora do pedido,
+**aponte e pergunte** antes de mexer. Trabalhar a cesta não autoriza tocar na bola.
+
 ## Idioma
 
 Todo material gerado (comentários, documentação, registros) em **português brasileiro**.
