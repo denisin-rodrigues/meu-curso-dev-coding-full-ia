@@ -120,3 +120,35 @@ superfície, referência visual vale mais que descrição.
 **Prompt reutilizável:** não (marco de processo/conhecimento) — mas o Protocolo de
 Documentação Visual do `docs/MATERIAIS.md` é o template a seguir em todo material novo.
 
+## 2026-06-12 — Cesta clay (build inicial) — primeiro ciclo completo do START
+
+**Pedido:** Criar a cesta de basquete 3D como teste do pipeline novo (START.md +
+MATERIAIS.md + templates de documentação visual). Direção decidida no Portão 0:
+estilizada total (clay), referência `public/reference/hoop.jpg`; alvo = objeto isolado
+(cena bola+cesta no ciclo 2).
+
+**O que foi feito:** Rota isolada `/cesta` (landing intocada). Config tipada Zod
+(`hoop.schema.ts` + 3 testes TDD, incluindo refine de níveis descendentes da rede) e
+conteúdo validado (`content/hoop.ts`, medidas em metros ancoradas em aro real ~Ø46cm).
+**Rede procedural** (`primitives/hoopNet.ts`, Three puro conforme fronteira do projeto):
+2 famílias × 8 fios CatmullRom descendo com meio passo angular por nível → treliça de
+losangos extrudada como TubeGeometry e mesclada numa única BufferGeometry (intermediárias
+descartadas com dispose; merge nulo lança erro — sem falha silenciosa). Cena R3F
+(`Hoop.tsx`: torus do aro + RoundedBox de suporte/tabela + rede; material físico clay
+único em 3 cores) e palco (`HoopExperience.tsx`: luz de estúdio suave, ContactShadows,
+OrbitControls com damping/auto-rotate, câmera inicial em contra-plongée).
+
+**Decisões e porquês:** Rede gerada por código (não asset) — simetria perfeita,
+parametrizável via Zod e didática (mesmo princípio do gen-textures da bola). Folha
+técnica do Nano Banana usada como apoio de ângulos; `hoop.jpg` canônica para proporção
+(divergência da folha anotada e resolvida no Portão 0). Clay = sem texturas: fidelidade
+vem de geometria + luz (Folha 2/texturas puladas conscientemente — protocolo na medida).
+
+**Iterações:** primeira tentativa funcionou — tsc estrito limpo, 7/7 testes, render
+visual correto no primeiro screenshot. Primeiro ciclo do laboratório sem retrabalho de
+material/textura; o custo que na bola foi pago em iterações aqui foi pago em contexto
+prévio (Portões 0 e 1).
+
+**Prompt reutilizável:** sim — o prompt da Folha 1 preenchido para a cesta clay
+(ver PROMPTS.md#design-system).
+
