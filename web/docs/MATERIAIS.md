@@ -25,6 +25,12 @@ Antes de gerar textura de um material novo, produza/peça **imagens de apoio**:
 Essas imagens funcionam como "DESIGN.md visual" do material e devem ficar em
 `public/reference/` do projeto.
 
+**Como gerar as folhas:** use os templates mestres do
+`../../prompt-vault/documentacao-visual.md` (Folha 1 = forma/ângulos, Folha 2 =
+material/superfície) — inclui a regra "imagem mostra, texto mede" (nunca pedir
+números na imagem; medidas reais ficam aqui no markdown) e o checklist de
+aceitação da folha gerada.
+
 ### Checklist de prompt para material novo
 
 Ao pedir geração de textura, sempre especificar:
