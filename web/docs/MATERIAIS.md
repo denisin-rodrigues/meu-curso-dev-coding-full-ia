@@ -73,15 +73,39 @@ superfície real (protocolo visual acima).
 
 ---
 
+## Clay / soft-touch (estilizado) — cesta de basquete
+
+**Status:** ✅ validado no ciclo da cesta (2026-06-12, aprovação do autor)
+**Onde está o código:** `src/three/scene/Hoop.tsx` (meshPhysicalMaterial) + `src/content/hoop.ts`
+
+### Física do material
+- Plástico macio/argila de brinquedo: fosco aveludado com brilho sutil de superfície
+- **Zero textura** — nenhum mapa de imagem; a materialidade vem inteira de
+  3 parâmetros + luz suave (contraexemplo perfeito do couro da bola)
+- Formas sempre arredondadas e "fofas": cantos generosos, tubos grossos, nada anguloso
+
+### ⚠️ Erros comuns (anti-referências)
+- **Plástico duro/brilhante** — roughness baixa demais lê como brinquedo barato injetado
+- **Borracha morta** — roughness 1.0 sem clearcoat perde a vida do render de ícone 3D
+- **Luz dura** — sombras duras quebram o aconchego; clay vive de luz macia multidirecional
+
+### Parâmetros validados (ciclo da cesta)
+- `meshPhysicalMaterial`: `roughness 0.5` · `clearcoat 0.15` · `metalness 0`
+- Luz: ambient forte (0.85) + 3 direcionais suaves sem sombra dura + ContactShadows leve
+- Paleta do ciclo: vermelho `#E8432E` · branco `#F4F2EE` · cinza-claro `#D9DDE3`
+- Geometria carrega o estilo: torus de tubo grosso, RoundedBox de raio generoso,
+  rede = tubos lisos sem nós (treliça procedural, `primitives/hoopNet.ts`)
+
 ## Materiais a estudar (próximos)
 
 | Material | Status | Projeto |
 |----------|--------|---------|
 | Couro esportivo (pebbled) | ✅ Validado | Projeto 01 — bola Jordan |
+| Clay / soft-touch | ✅ Validado | Ciclo da cesta (estilizada) |
 | Borracha (sola/quadra) | ⬜ | — |
 | Tecido/mesh esportivo | ⬜ | — |
-| Metal (aro da cesta) | ⬜ | em curso (ciclo da cesta) |
-| Nylon (rede da cesta) | ⬜ | em curso (ciclo da cesta) |
+| Metal (aro da cesta) | ⬜ | adiado — direção do ciclo virou clay |
+| Nylon (rede da cesta) | ⬜ | adiado — direção do ciclo virou clay |
 | Madeira (quadra) | ⬜ | — |
 | Pele humana | ⬜ | — |
 
