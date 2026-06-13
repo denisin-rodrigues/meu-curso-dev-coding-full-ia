@@ -118,9 +118,21 @@ Construção de UM site premium do zero, aplicando as 5 etapas do método.
 
 ### Fase 5 — Plataforma inteligente (norte futuro, pós-lançamento)
 > Depende do acúmulo de DEV-LOGs gerados pelo Kit Memória de Dev (`metodo/memoria-dev/`).
-- [ ] **Fase B — RAG sobre os logs:** indexar os DEV-LOGs (~10+) para consulta semântica
+
+- [ ] **Fase B — RAG sobre os logs** (desenho decidido em 2026-06-12):
+  - **Gatilho para construir** (não construir antes): ~3-4 projetos concluídos com
+    DEV-LOGs cheios, OU MATERIAIS.md com 10+ materiais, OU a pergunta "onde resolvi
+    isso?" sem saber em qual arquivo procurar. Antes disso, as regras de leitura
+    obrigatória (AGENTS.md) têm recall de 100% e RAG só adicionaria erro.
+  - **Stack decidida:** Supabase **pgvector** (já conectado ao ambiente) + script de
+    ingestão Node (chunk = seção dos .md, com metadados: projeto/material/categoria/
+    data) + **servidor MCP** de busca ("memoria-lab") consumível por Claude Code,
+    Codex e Antigravity. Re-indexação disparada por commit.
+  - **Princípio:** regras AGENTS.md = memória garantida (conhecimento crítico);
+    RAG = memória probabilística em escala (acervo histórico). Camadas, não troca.
 - [ ] **Fase C — Agente tutor na área de membros:** IA (LangChain/LangGraph) que responde
-      dúvidas dos alunos com base no processo real registrado nos logs — terá spec próprio
+      dúvidas dos alunos com base no processo real registrado nos logs — reusa o banco
+      vetorial da Fase B; terá brainstorm + spec próprios (é um produto completo)
 
 ---
 
