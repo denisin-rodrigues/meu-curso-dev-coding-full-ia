@@ -49,6 +49,28 @@ fazem tweens da mesma propriedade conflitarem na timeline.
 
 ---
 
+## ⚠️ Armadilha 4 — `scroll-behavior: smooth` quebra o scrub
+
+**Sintoma:** os objetos parecem **parados/congelados**; a animação não acompanha o
+scroll (parece que tudo só "rola junto" com a página).
+
+**Causa:** `scroll-behavior: smooth` no CSS (html/body) conflita com o `scrub` do
+ScrollTrigger — está na lista oficial de erros comuns do GSAP. Remova essa
+propriedade do `globals.css`.
+
+**Bônus de robustez:** registre só `gsap.registerPlugin(ScrollTrigger)` (NÃO passe
+`useGSAP` como plugin), use `invalidateOnRefresh: true` e chame `ScrollTrigger.refresh()`
+após criar a animação (garante medidas certas após o canvas/conteúdo assentarem).
+
+## ✅ Padrão validado — Câmera panorâmica numa "quadra vertical"
+
+Para "objeto no topo viaja até um alvo FIXO no fim da página": modele um mundo
+vertical alto — objeto começa em `y=0`, alvo fixo em `y=HOOP_Y` (negativo, lá
+embaixo). O scroll **desce a câmera** (`camera.position.y`) de enquadrar o objeto
+até enquadrar o alvo. O alvo nunca se move → fica genuinamente "no fim". A queda do
+objeto usa **física de projétil** (`y ∝ p^1.8 ≈ ½gt²`) para "pesar" ao cair.
+(Ver `src/three/scene/ShotExperience.tsx`.)
+
 ## ✅ Padrão validado — Scroll storytelling com 1 fonte de verdade
 
 Em vez de orquestrar N tweens, **scrube um único progresso `0→1`** e calcule o

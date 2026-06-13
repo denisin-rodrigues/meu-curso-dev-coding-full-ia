@@ -184,3 +184,28 @@ e não física: reversível com o scroll e sempre perfeita, alinhada à landing.
 **Prompt reutilizável:** não (marco de engenharia/animação) — padrão e armadilhas
 ficam em `docs/ANIMACAO-3D.md`.
 
+## 2026-06-13 — Correção: câmera panorâmica + projétil (cesta fixa no fim)
+
+**Pedido:** Feedback do autor — os objetos pareciam parados e "rolando junto com a
+página", e a cesta deveria ficar FIXA no fim da página, não junto da bola. Pediu
+referência matemática/física.
+
+**O que foi feito:** Reescrita do `ShotExperience` com o modelo "quadra vertical":
+bola começa em y=0 (topo), cesta FIXA em y=-3.2 (fim do mundo). O scroll desce a
+**câmera** (`camera.position.y`, via `useThree`) até enquadrar a cesta. Queda da
+bola com **física de projétil** (`y ∝ p^1.8 ≈ ½gt²`). Removido `scroll-behavior:
+smooth` do globals.css (conflitava com o scrub — causa do "tudo parado"), corrigido
+`registerPlugin` (sem `useGSAP`), adicionados `invalidateOnRefresh` + `ScrollTrigger.refresh()`.
+
+**Decisões e porquês:** câmera panorâmica (não mover a bola num canvas fixo) porque
+casa com o modelo mental do autor — a cesta "mora" no fim e o scroll te leva até
+ela. Física de projétil dá peso real à queda (aceleração constante).
+
+**Iterações:** verificado nos 3 estados (topo: bola hero, sem cesta; meio: bola
+caindo; fim: cesta enquadrada + bola na rede). O `scroll-behavior: smooth` era a
+causa raiz do "objetos parados" relatado — registrado como Armadilha 4 no
+`docs/ANIMACAO-3D.md`.
+
+**Prompt reutilizável:** não — padrão "câmera panorâmica em quadra vertical" em
+`docs/ANIMACAO-3D.md`.
+

@@ -20,7 +20,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
+  /* NÃO usar scroll-behavior: smooth — conflita com o scrub do GSAP ScrollTrigger
+     (faz a animação "travar"/não acompanhar o scroll). Ver docs/ANIMACAO-3D.md. */
 }
 
 body {
