@@ -40,6 +40,13 @@ com muitas iterações; não o redescubra.
 - Após o usuário **validar** um material: registre a nova seção no MATERIAIS.md
   (física, erros observados, correções, parâmetros finais). Sem o usuário pedir.
 
+## 🎞️ Inteligência de Animação (obrigatória em cenas com scroll/motion)
+
+Antes de **criar ou alterar animação de cena 3D** (GSAP, ScrollTrigger, trajetórias,
+scroll storytelling), leia `docs/ANIMACAO-3D.md`. Contém armadilhas já depuradas
+(refs em Suspense chegam null, keyframes do GSAP, overwrite de tweens) e o padrão
+validado de "1 progresso scrubado + waypoints". Conhecimento caro; não redescubra.
+
 ## 🧱 Tipagem forte (obrigatória)
 
 - Proibido `any`. Use `unknown` + narrowing quando o tipo for incerto.

@@ -2,16 +2,23 @@
 
 import { RoundedBox } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
-import type { Group } from "three";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
+import type { Group, Mesh } from "three";
 import { hoopConfig } from "@/content/hoop";
 import { buildNetGeometry } from "@/three/primitives/hoopNet";
 
+interface HoopProps {
+  /** Auto-giro lento (product viewer). Desligue em cenas com trajetória controlada. */
+  readonly autoSpin?: boolean;
+  /** Expõe a malha da rede para animação externa (ex: pulso quando a bola passa). */
+  readonly netRef?: RefObject<Mesh | null>;
+}
+
 /**
  * A cesta clay: aro (torus), suporte e tabela (RoundedBox) + rede procedural.
- * Material único soft-touch em 3 cores (ver docs/MATERIAIS.md). Gira devagar.
+ * Material único soft-touch em 3 cores (ver docs/MATERIAIS.md).
  */
-export function Hoop() {
+export function Hoop({ autoSpin = true, netRef }: HoopProps = {}) {
   const ref = useRef<Group>(null);
   const { rim, bracket, board, net, material, spin } = hoopConfig;
 
@@ -19,7 +26,7 @@ export function Hoop() {
   useEffect(() => () => netGeometry.dispose(), [netGeometry]);
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * spin.idleSpeed * 0.2;
+    if (autoSpin && ref.current) ref.current.rotation.y += delta * spin.idleSpeed * 0.2;
   });
 
   // Layout no eixo Z: aro na origem; suporte cola o aro à face frontal da tabela.
@@ -55,7 +62,7 @@ export function Hoop() {
       </RoundedBox>
 
       {/* Rede: treliça procedural de tubos lisos */}
-      <mesh geometry={netGeometry}>
+      <mesh ref={netRef ?? null} geometry={netGeometry}>
         <meshPhysicalMaterial color={net.color} {...clay} />
       </mesh>
     </group>

@@ -152,3 +152,35 @@ prévio (Portões 0 e 1).
 **Prompt reutilizável:** sim — o prompt da Folha 1 preenchido para a cesta clay
 (ver PROMPTS.md#design-system).
 
+## 2026-06-13 — Ciclo 2: bola cai na cesta dirigida por scroll (+ 3 bugs caçados)
+
+**Pedido:** A bola é heroína no topo e o scroll inteiro da página é a trajetória
+dela caindo dentro da cesta no rodapé (clímax = fim da página). Mecânica: GSAP
+ScrollTrigger com scrub (não física), como a landing wip.
+
+**O que foi feito:** Rota isolada `/arremesso` (4 telas, canvas fixo). Cena unificada
+`ShotExperience.tsx` com bola (Basketball reusada, escalada a 0.12 = tamanho real
+vs aro em metros) + cesta (Hoop com `autoSpin={false}` e `netRef` exposto). Refator
+de `Hoop` para aceitar `autoSpin` e `netRef`. Trajetória por **1 progresso scrubado
+0→1** + array de waypoints `TRACK` interpolado com smoothstep (`sampleTrack`), e
+pulso da rede como função de `p` (`netStretch`). Conhecimento consolidado em
+`docs/ANIMACAO-3D.md` (leitura obrigatória via AGENTS.md).
+
+**Decisões e porquês:** abandonei a timeline multi-tween em favor de 1 fonte de
+verdade (progresso → waypoints) por robustez e clareza didática. Coreografia (scrub)
+e não física: reversível com o scroll e sempre perfeita, alinhada à landing.
+
+**Iterações (3 bugs reais — material de aula):**
+1. **Refs em Suspense chegavam null** → a animação nunca rodava; a bola ficava em
+   (0,0,0) e só o HTML de fundo rolava (ilusão de movimento). Correção: grupos
+   controlados FORA do Suspense, suspendendo só a Basketball internamente.
+2. **`keyframes` do GSAP com duration por quadro** rodava só o 1º trecho
+   (`progress(1)` parava no keyframe 0).
+3. **Tweens encadeadas na mesma propriedade** se anulavam (overwrite / posições em
+   segundos vs frações). As 3 resolvidas pelo padrão de progresso único.
+   Diagnóstico decisivo foi `apply(1)` direto + logs (o scrub no preview em
+   background estrangula o rAF e dessincroniza o scroll — verificação enganosa).
+
+**Prompt reutilizável:** não (marco de engenharia/animação) — padrão e armadilhas
+ficam em `docs/ANIMACAO-3D.md`.
+
