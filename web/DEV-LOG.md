@@ -209,3 +209,28 @@ causa raiz do "objetos parados" relatado — registrado como Armadilha 4 no
 **Prompt reutilizável:** não — padrão "câmera panorâmica em quadra vertical" em
 `docs/ANIMACAO-3D.md`.
 
+## 2026-06-13 — Motion Spec: o plano de animação vira dado tipado
+
+**Pedido:** Discussão com o autor sobre capacidade das IAs de interpretar movimento
+por vídeo e qual arquitetura usar para o plano de animação. Decisão: extrair a
+trajetória do código para um spec declarativo e tipado.
+
+**O que foi feito:** Criados `schemas/motion.schema.ts` (keyframes `{p,x,y,z,scale,
+ease}`, track escalar, evento de pulso, com refine p=0→1 crescente), `three/motion/
+sampleMotion.ts` (easings nomeados incl. `gravityIn`=t²; `sampleTransform`/`sampleScalar`/
+`samplePulse`) e `content/shotMotion.ts` (o plano do arremesso como dado, validado).
+`ShotExperience` refatorado para apenas **executar** o spec via `sampleMotion`. 5 testes
+novos do motion (12/12 no total). Templates: `prompt-vault/storyboard.md`; docs:
+Briefing de Movimento no START, padrão Motion Spec + ponte ffmpeg no ANIMACAO-3D.md.
+
+**Decisões e porquês:** animação é matemática (posição no tempo) → a IA raciocina
+melhor sobre dado do que sobre pixels de vídeo. Vídeo não é input da IA de código;
+serve ao humano + extração de frames (ffmpeg) → storyboard → spec. Spec tipado =
+diff-ável, testável, reutilizável, RAG-ready. Refatoração preservou a animação
+(fim idêntico; testes confirmam os valores amostrados).
+
+**Iterações:** primeira tentativa — tsc limpo, 12/12 testes, swish final idêntico ao
+de antes da refatoração.
+
+**Prompt reutilizável:** sim — template de storyboard em `prompt-vault/storyboard.md`.
+

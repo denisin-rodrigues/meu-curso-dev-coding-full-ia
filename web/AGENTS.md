@@ -37,6 +37,8 @@ com muitas iterações; não o redescubra.
 - Para **material novo**: siga o Protocolo de Documentação Visual do MATERIAIS.md
   (vistas ortográficas, medidas, ampliações de superfície) ANTES de gerar textura.
   Referência visual estruturada > descrição textual — validado no Projeto 01.
+- **Animação:** o plano de movimento mora num **Motion Spec tipado**
+  (`src/content/*Motion.ts` + `motion.schema.ts`), não embutido no componente.
 - Após o usuário **validar** um material: registre a nova seção no MATERIAIS.md
   (física, erros observados, correções, parâmetros finais). Sem o usuário pedir.
 

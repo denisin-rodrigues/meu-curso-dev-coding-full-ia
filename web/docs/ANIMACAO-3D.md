@@ -71,6 +71,32 @@ até enquadrar o alvo. O alvo nunca se move → fica genuinamente "no fim". A qu
 objeto usa **física de projétil** (`y ∝ p^1.8 ≈ ½gt²`) para "pesar" ao cair.
 (Ver `src/three/scene/ShotExperience.tsx`.)
 
+## ✅ Padrão validado — Motion Spec (o plano de animação como DADO)
+
+Animação é matemática (posição no tempo) — a IA raciocina muito melhor sobre ela
+como **dado tipado** do que como pixels de vídeo. Por isso o plano de movimento mora
+num spec declarativo e validado, separado do código que renderiza:
+
+- `src/schemas/motion.schema.ts` — schema Zod: keyframes `{p,x,y,z,scale,ease}`,
+  track escalar `{p,v,ease}` (ex: câmera), e eventos (ex: pulso da rede). Valida que
+  os keyframes vão de p=0 a p=1, crescentes.
+- `src/content/*Motion.ts` — o spec em si (dado), validado em runtime.
+- `src/three/motion/sampleMotion.ts` — `sampleMotion(spec, p)` interpola com easings
+  nomeados. `gravityIn` (t²) é a queda física real.
+- O componente R3F só **executa** o spec no `onUpdate` do scroll.
+
+Benefícios: diff-ável, testável (unit tests nos valores amostrados), reutilizável,
+didático e "RAG-ready" (Fase B). Ver `src/three/scene/ShotExperience.tsx`.
+
+### Referência de movimento: vídeo > imagem (e a ponte ffmpeg)
+A IA de código **não consome vídeo** como entrada, e modelos que "assistem" vídeo
+pegam a vibe, não os parâmetros precisos. Então:
+- A referência rica (vídeo/GIF/link de site) é para o **humano** e para extração.
+- `ffmpeg -i ref.mp4 -vf fps=2 frame_%02d.png` extrai key frames → viram storyboard
+  (a IA lê **imagens**). Template de storyboard em `prompt-vault/storyboard.md`.
+- Storyboard + beats → **Motion Spec** (dado). O vídeo entra no processo, não direto
+  na IA de código.
+
 ## ✅ Padrão validado — Scroll storytelling com 1 fonte de verdade
 
 Em vez de orquestrar N tweens, **scrube um único progresso `0→1`** e calcule o

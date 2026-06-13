@@ -59,6 +59,15 @@ Para **cada** material listado:
       estudo do material (luz/brilho) · padrões geométricos
 - [ ] Anti-referências anotadas (o que o material **não** é)
 
+### 1c. Briefing de Movimento (só se houver animação)
+Se o objeto vai se mover/reagir (scroll, intro, interação):
+- [ ] **Referência rica:** vídeo/GIF/link de site do efeito desejado (movimento é
+      temporal — vídeo > imagem). `ffmpeg` extrai key frames se útil.
+- [ ] **Beats em palavras:** os momentos-chave (ex: hero → cai → cruza aro → rede pulsa)
+- [ ] **Storyboard** (opcional): ver `prompt-vault/storyboard.md`
+- [ ] O plano vira **Motion Spec tipado** (`src/content/*Motion.ts` + `motion.schema.ts`),
+      não lógica solta no componente. Ver `docs/ANIMACAO-3D.md`.
+
 **Portão 1:** plano apresentado ao usuário e **aprovado explicitamente**.
 Nenhum código antes do "sim". (Evidência local: DEV-LOG 2026-06-12 — mais contexto
 visual estruturado superou mais prompts de texto.)
