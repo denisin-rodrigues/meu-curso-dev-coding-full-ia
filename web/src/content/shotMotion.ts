@@ -13,9 +13,9 @@ const data = {
   // Bola: y segue a parábola da gravidade (amostrada); x serpenteia e zera no aro;
   // escala recua do hero (1.45×) ao tamanho real (1×).
   ball: [
-    { p: 0.0, x: 0.0, y: 0.0, z: 0, scale: 1.45, ease: "linear" },
-    { p: 0.25, x: 0.21, y: -0.211, z: 0, scale: 1.32, ease: "smooth" },
-    { p: 0.5, x: 0.0, y: -0.845, z: 0, scale: 1.1, ease: "smooth" },
+    { p: 0.0, x: 0.0, y: 0.1, z: 0.7, scale: 1.8, ease: "linear" }, // hero centralizado + zoom
+    { p: 0.25, x: 0.16, y: -0.2, z: 0.35, scale: 1.35, ease: "smooth" },
+    { p: 0.5, x: 0.0, y: -0.845, z: 0.1, scale: 1.1, ease: "smooth" },
     { p: 0.75, x: -0.07, y: -1.901, z: 0, scale: 1.0, ease: "smooth" },
     { p: 1.0, x: 0.0, y: -3.38, z: 0, scale: 1.0, ease: "smooth" },
   ],
