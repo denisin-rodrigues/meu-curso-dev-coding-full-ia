@@ -9,12 +9,12 @@ const ShotExperience = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex h-full w-full items-center justify-center text-neutral-400">
-        Carregando o arremesso…
+        Carregando…
       </div>
     ),
   },
 );
 
-export function ShotScene() {
-  return <ShotExperience />;
+export function ShotScene({ trigger = "body" }: { readonly trigger?: string }) {
+  return <ShotExperience trigger={trigger} />;
 }

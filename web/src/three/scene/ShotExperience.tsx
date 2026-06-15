@@ -22,7 +22,7 @@ const HOOP_Y = -3.2; // posição fixa da cesta = "o fim da página"
 const CAM_Z = 2.5;
 
 /** A bola cai pela quadra vertical até a cesta enquanto a câmera desce com o scroll. */
-function ShotScene() {
+function ShotScene({ trigger }: { readonly trigger: string }) {
   const { camera } = useThree();
   const ball = useRef<Group>(null);
   const net = useRef<Mesh>(null);
@@ -47,7 +47,7 @@ function ShotScene() {
       p: 1,
       ease: "none",
       scrollTrigger: {
-        trigger: "body",
+        trigger,
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
@@ -90,10 +90,10 @@ function ShotScene() {
   );
 }
 
-export function ShotExperience() {
+export function ShotExperience({ trigger = "body" }: { readonly trigger?: string } = {}) {
   return (
     <Canvas camera={{ position: [0, 0.1, CAM_Z], fov: 42 }} dpr={[1, 2]}>
-      <ShotScene />
+      <ShotScene trigger={trigger} />
     </Canvas>
   );
 }
