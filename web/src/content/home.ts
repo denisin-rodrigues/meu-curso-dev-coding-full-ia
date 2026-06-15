@@ -1,13 +1,30 @@
 import { homeContentSchema, type HomeContent } from "@/schemas/content.schema";
 
-// Dado bruto do conteúdo. Validado no carregamento — se o formato divergir do schema,
-// o erro aparece já no build/import, nunca silenciosamente.
+// Conteúdo da landing do curso. Validado no carregamento — se o formato divergir
+// do schema, o erro aparece já no build/import, nunca silenciosamente.
 const data = {
   hero: {
-    titulo: "Laboratório 3D",
-    subtitulo: "Fundação do site premium com Three.js",
-    cta: "Explorar",
+    titulo: "DEV CODING FULL IA",
+    subtitulo:
+      "Crie sites premium com animações de alto nível usando IA — mesmo sem ser programador.",
+    cta: "Em breve",
   },
+  beats: [
+    "Role a página.",
+    "Cada rolagem é parte do arremesso.",
+    "Este site foi feito com o método que você vai aprender.",
+  ],
+  metodo: {
+    titulo: "O método em 5 passos",
+    passos: [
+      { numero: "01", titulo: "Referência", descricao: "Escolher a imagem ou vídeo do que se quer criar." },
+      { numero: "02", titulo: "Contexto", descricao: "Planejar tudo antes de escrever uma linha de código." },
+      { numero: "03", titulo: "Prompt", descricao: "Pedir à IA com contexto, referência, regras e resultado." },
+      { numero: "04", titulo: "Build", descricao: "Construir em pedaços, testando a cada passo." },
+      { numero: "05", titulo: "Polish", descricao: "Lapidar animação, luz e detalhes até o nível premium." },
+    ],
+  },
+  cta: { titulo: "O curso está chegando.", botao: "Em breve" },
 };
 
 export const homeContent: HomeContent = homeContentSchema.parse(data);
