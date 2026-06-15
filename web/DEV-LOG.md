@@ -234,3 +234,31 @@ de antes da refatoração.
 
 **Prompt reutilizável:** sim — template de storyboard em `prompt-vault/storyboard.md`.
 
+## 2026-06-13 — Landing do curso (vitrine 3D) + bola com 2 logos
+
+**Pedido:** Transformar a landing (`/`) em vitrine do curso "Dev Coding Full IA",
+usando a cena do arremesso como prova do método. Design system da referência
+`Slam Dunk Store.html` adaptado: fundo branco, títulos Anton pretos, azul de acento
+(a bola azul salta no branco). Depois: deixar a bola com só 2 logos Jumpman.
+
+**O que foi feito:** Fluxo completo brainstorm → spec → plano → execução (specs/plans
+em `docs/superpowers/`). Fontes Anton+Inter e tokens (ink/paper/brand-blue/cyan) +
+`.text-outline`. Conteúdo do curso tipado/validado (hero, beats, metodo 5 passos, cta).
+`ShotExperience` ganhou `trigger` parametrizado (default `"body"` preserva `/arremesso`).
+Componentes `landing/{Hero,MethodSteps,CtaEmBreve}`. `page.tsx` em 2 atos: Ato 1 =
+canvas `sticky` da cena com copy Anton por cima (camada puxada com `-mt-[100vh]`);
+Ato 2 = método em 5 passos (cards, número ciano, espaço de imagem) + CTA "Em breve"
+decorativo. Bola: removido o `<Decal>` frontal → ficam os 2 logos assados na textura.
+
+**Decisões e porquês:** modelo "2 atos" (herói imersivo → conteúdo) em vez de 3D de
+fundo eterno, pra manter o método legível. Fundo branco (não azul) decidido pelo
+autor: a bola azul é o herói cromático. Remover o decal (em vez de regerar a textura)
+é a mudança mínima pra chegar a 2 logos.
+
+**Iterações:** primeira tentativa — tsc limpo, 12/12 testes. Verificação visual do
+hero confirmada por screenshot + medição de DOM (o screenshot do preview reseta o
+scroll na captura, então o Ato 2 foi conferido via DOM: 5 cards, 2 h2, 5 placeholders).
+`/arremesso` e `/cesta` sem regressão.
+
+**Prompt reutilizável:** não — a copy do curso vive em `content/home.ts`.
+
