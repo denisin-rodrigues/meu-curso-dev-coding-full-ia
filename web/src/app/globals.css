@@ -10,6 +10,14 @@
   
   --font-anybody: var(--font-anybody), sans-serif;
   --font-hanken: var(--font-hanken), sans-serif;
+  --font-anton: var(--font-anton), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+
+  --color-ink: #0E0E0E;
+  --color-paper: #FFFFFF;
+  --color-brand-blue: #1565C0;
+  --color-brand-cyan: #47C1E8;
+  --color-muted: #5F5E5A;
 }
 
 :root {
@@ -36,4 +44,10 @@ body {
 * {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Texto-fantasma (só contorno) — design system Slam Dunk, em ciano da marca */
+.text-outline {
+  -webkit-text-stroke: 1.5px #47C1E8;
+  color: transparent;
 }
