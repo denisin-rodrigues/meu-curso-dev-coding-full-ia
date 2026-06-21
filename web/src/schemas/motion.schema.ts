@@ -50,6 +50,7 @@ const pulseEvent = z.object({
 
 export const motionSpecSchema = z.object({
   cameraY: scalarTrack, // panorâmica vertical da câmera
+  cameraX: scalarTrack.optional(), // panorâmica horizontal (enquadra a bola sem distorção)
   ball: transformTrack, // trajetória + escala da bola
   netPulse: pulseEvent, // rede abrindo quando a bola cruza o aro
 });

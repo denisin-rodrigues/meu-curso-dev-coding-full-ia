@@ -13,7 +13,7 @@ const data = {
     scale: 0.55,
     color: "#FFFAF4",
   },
-  spin: { idleSpeed: 0.4, dampingFactor: 0.08 },
+  spin: { idleSpeed: 0.432, dampingFactor: 0.08 },
   colors: { base: "#56B4C3", accent: "#FFFAF4" },
 };
 

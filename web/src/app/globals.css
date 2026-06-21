@@ -1,31 +1,208 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+/* CSS do Lenis (smooth-scroll global). Necessário para a medição de altura de
+   scroll (html.lenis body { height: auto }) e prevenção de scroll aninhado. */
+@import 'lenis/dist/lenis.css';
+
+@keyframes scroll-reel-char-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-reel-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+.scroll-reel-char {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(12px);
+  animation: scroll-reel-char-rise 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.scroll-reel-exit {
+  animation: scroll-reel-exit 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes swing {
+  0% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(-8deg);
+  }
+}
+
+@utility animate-swing {
+  animation: swing 4s ease-in-out infinite alternate;
+}
+
+/* ============================================================================
+   DESIGN SYSTEM — "High-Performance Athletic System"
+   Fonte: DESIGN (4).md. Esquema de cores Material 3 + Skybolt Blue / Kinetic Gold.
+   Aqui ficam SÓ os tokens (cores, fontes, escala tipográfica, sombra). O layout e
+   os cantos dos componentes não foram tocados — ver disciplina de escopo no AGENTS.md.
+
+   Os valores canônicos vivem em :root (CSS vars). O bloco @theme apenas EXPÕE
+   esses tokens como utilitários do Tailwind v4 (bg-primary, text-on-surface, etc.).
+   Aliases legados (brand-blue, ink, paper, muted...) continuam funcionando: foram
+   re-apontados para o novo sistema, então os componentes herdam as cores novas
+   sem precisar editar nenhum arquivo de componente.
+   ========================================================================== */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-cyan-primary: #47C1E8;
-  --color-surface-bright: #F5FAFC;
-  --color-deep-shadow: #171C1E;
-  --color-channel-white: #FFFFFF;
-  
+  /* — Famílias tipográficas — */
   --font-anybody: var(--font-anybody), sans-serif;
   --font-hanken: var(--font-hanken), sans-serif;
   --font-anton: var(--font-anton), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-monument: var(--font-monument), sans-serif;
 
-  --color-ink: #0E0E0E;
-  --color-paper: #FFFFFF;
-  --color-brand-blue: #1565C0;
-  --color-brand-cyan: #47C1E8;
-  --color-muted: #5F5E5A;
+  /* — Escala tipográfica do spec (size / line-height / tracking / weight) — */
+  --text-display-xl: 120px;
+  --text-display-xl--line-height: 100px;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-xl--font-weight: 400;
+
+  --text-headline-lg: 64px;
+  --text-headline-lg--line-height: 60px;
+  --text-headline-lg--letter-spacing: 0.02em;
+  --text-headline-lg--font-weight: 400;
+
+  --text-headline-mobile: 40px;
+  --text-headline-mobile--line-height: 44px;
+  --text-headline-mobile--font-weight: 400;
+
+  --text-title-md: 24px;
+  --text-title-md--line-height: 32px;
+  --text-title-md--font-weight: 700;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.1em;
+  --text-label-caps--font-weight: 500;
+
+  /* — Sombra "Hard-Drop" (4px offset, 0 blur, Slate Tech) — vibe brutalista/atlética — */
+  --shadow-hard: 4px 4px 0 0 #5a7a98;
+
+  /* — Material 3 color scheme (expõe os tokens do :root como utilitários) — */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+
+  /* Acentos nomeados pela prosa do spec (atalhos semânticos) */
+  --color-skybolt: var(--skybolt);
+  --color-kinetic-gold: var(--tertiary-container);
+  --color-slate-tech: var(--secondary);
+
+  /* — Aliases legados (consumidos pelos componentes atuais) re-apontados ao novo sistema — */
+  --color-ink: var(--on-surface); /* era #0E0E0E → on-surface #181c21 */
+  --color-paper: var(--surface-container-lowest); /* era #FFFFFF → #ffffff */
+  --color-brand-blue: var(
+    --skybolt
+  ); /* era #1565C0 → Skybolt #008DD6 (CTAs de alto impacto) */
+  --color-brand-cyan: var(
+    --primary-container
+  ); /* era #47C1E8 → primary-container #4eb4ff */
+  --color-muted: var(
+    --on-surface-variant
+  ); /* era #5F5E5A → on-surface-variant #3f4851 */
+
+  /* muted-foreground: token esperado por componentes shadcn (ex.: scroll-portrait-wall).
+     Mapeado ao mesmo on-surface-variant do alias `muted`, para hints/legendas terem cor. */
+  --color-muted-foreground: var(--on-surface-variant);
 }
 
 :root {
-  --background: #F5FAFC;
-  --foreground: #171C1E;
+  /* Material 3 — High-Performance Athletic System (DESIGN (4).md) */
+  --background: #f7f9ff;
+  --foreground: #181c21;
+
+  --surface: #f7f9ff;
+  --surface-dim: #d7dae1;
+  --surface-bright: #f7f9ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f0f4fa;
+  --surface-container: #ebeef5;
+  --surface-container-high: #e5e8ef;
+  --surface-container-highest: #dfe3e9;
+  --on-surface: #181c21;
+  --on-surface-variant: #3f4851;
+  --outline: #6f7882;
+  --outline-variant: #bfc7d2;
+
+  --primary: #006398;
+  --on-primary: #ffffff;
+  --primary-container: #4eb4ff;
+  --on-primary-container: #00446a;
+
+  --secondary: #41617e;
+  --on-secondary: #ffffff;
+  --secondary-container: #bddeff;
+  --on-secondary-container: #42627f;
+
+  --tertiary: #805600;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #e59f16; /* Kinetic Gold */
+  --on-tertiary-container: #593b00;
+
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+
+  /* Skybolt Blue — azul "brand" de alto impacto descrito na prosa do spec */
+  --skybolt: #008dd6;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   /* NÃO usar scroll-behavior: smooth — conflita com o scrub do GSAP ScrollTrigger
@@ -46,8 +223,478 @@ body {
   scrollbar-width: none;
 }
 
-/* Texto-fantasma (só contorno) — design system Slam Dunk, em ciano da marca */
+/* Texto-fantasma (só contorno) — agora em Skybolt Blue, alinhado ao design system athletic. */
 .text-outline {
-  -webkit-text-stroke: 1.5px #47C1E8;
+  -webkit-text-stroke: 1.5px var(--skybolt);
   color: transparent;
+}
+
+/* ============================================================================
+   LOADING SPINNER — bola (estilo basquete) rolando numa pista.
+   Componente: components/ui/snow-ball-loading-spinner.tsx
+   O snippet de origem trouxe só os @keyframes; as classes .pl* (toda a aparência)
+   faltavam e foram reconstruídas aqui. A bola usa o Skybolt Blue para casar com a
+   bola 3D do herói. Escala tudo mudando o `font-size` do .pl.
+   ========================================================================== */
+
+@keyframes ball {
+  from {
+    transform: rotate(0) translateY(-6.5em);
+  }
+  50% {
+    transform: rotate(180deg) translateY(-6em);
+  }
+  to {
+    transform: rotate(360deg) translateY(-6.5em);
+  }
+}
+
+@keyframes ballInnerShadow {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes ballOuterShadow {
+  from {
+    transform: rotate(20deg);
+  }
+  to {
+    transform: rotate(-340deg);
+  }
+}
+
+@keyframes ballTexture {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(50%);
+  }
+}
+
+@keyframes trackCover {
+  from {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.pl {
+  font-size: 1rem;
+  position: relative;
+  width: 16em;
+  height: 16em;
+  margin: auto;
+}
+
+.pl__outer-ring,
+.pl__inner-ring,
+.pl__track-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Pista onde a bola corre */
+.pl__outer-ring {
+  width: 14em;
+  height: 14em;
+  border: 1em solid var(--surface-container-high);
+  box-shadow:
+    0 0.5em 1.4em rgba(24, 28, 33, 0.18),
+    inset 0 0 1.2em rgba(24, 28, 33, 0.22);
+}
+
+.pl__inner-ring {
+  width: 12.1em;
+  height: 12.1em;
+  border: 0.18em solid rgba(24, 28, 33, 0.08);
+}
+
+/* Brilho que percorre a pista (recortado na faixa do anel pela máscara radial) */
+.pl__track-cover {
+  width: 14em;
+  height: 14em;
+  opacity: 0.65;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.6) 0deg,
+    transparent 45deg 315deg,
+    rgba(255, 255, 255, 0.6) 360deg
+  );
+  -webkit-mask: radial-gradient(transparent 6em, #000 6em 7em, transparent 7em);
+  mask: radial-gradient(transparent 6em, #000 6em 7em, transparent 7em);
+  animation: trackCover 3s linear infinite;
+}
+
+/* Bola: elemento que orbita a pista (o ball keyframe gira + translada) */
+.pl__ball {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.8em;
+  height: 2.8em;
+  margin: -1.4em 0 0 -1.4em;
+  border-radius: 50%;
+  animation: ball 3s linear infinite;
+}
+
+.pl__ball-texture,
+.pl__ball-outer-shadow,
+.pl__ball-inner-shadow,
+.pl__ball-side-shadows {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+/* Esfera azul brilhante + sheen que corre na superfície (sensação de rolar) */
+.pl__ball-texture {
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 34% 30%,
+    #7ecbff 0,
+    var(--primary-container) 28%,
+    var(--skybolt) 60%,
+    var(--primary) 100%
+  );
+}
+
+.pl__ball-texture::after {
+  content: "";
+  position: absolute;
+  top: -25%;
+  left: -60%;
+  width: 60%;
+  height: 150%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  filter: blur(2px);
+  animation: ballTexture 1.2s linear infinite;
+}
+
+/* Sombra de volume (luz fixa graças à contra-rotação) */
+.pl__ball-inner-shadow {
+  box-shadow:
+    inset -0.25em -0.3em 0.55em rgba(0, 0, 0, 0.45),
+    inset 0.18em 0.2em 0.4em rgba(255, 255, 255, 0.45);
+  animation: ballInnerShadow 3s linear infinite;
+}
+
+.pl__ball-outer-shadow {
+  box-shadow: 0 0.5em 0.7em rgba(24, 28, 33, 0.4);
+  animation: ballOuterShadow 3s linear infinite;
+}
+
+.pl__ball-side-shadows {
+  box-shadow:
+    -0.4em 0 0.5em rgba(0, 0, 0, 0.18),
+    0.4em 0 0.5em rgba(0, 0, 0, 0.18);
+}
+
+/* Respeita quem pediu menos movimento: mantém a bola visível, sem girar */
+@media (prefers-reduced-motion: reduce) {
+  .pl__ball,
+  .pl__ball-texture::after,
+  .pl__ball-inner-shadow,
+  .pl__ball-outer-shadow,
+  .pl__track-cover {
+    animation: none;
+  }
+  .pl__ball {
+    transform: translateY(-6.5em);
+  }
+}
+
+/* ============================================================================
+   PARALLAX (camadas Osmo) — componente: components/ui/parallax-scrolling.tsx
+   O snippet de origem trouxe só o JS; estas classes .parallax* (o layout das
+   camadas) foram reconstruídas. As imagens-camada empilham absolutas e cada uma
+   é deslocada em yPercent pelo GSAP, criando profundidade no scroll.
+   ========================================================================== */
+
+.parallax {
+  position: relative;
+  width: 100%;
+  /* Fundo preto: dá continuidade entre a cena e a seção de conteúdo abaixo, e
+     preenche as áreas transparentes das camadas .webp. */
+  background: #000;
+}
+
+.parallax__header {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.parallax__visuals {
+  position: absolute;
+  inset: 0;
+}
+
+.parallax__layers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Cada camada cobre TODO o quadro (inset:0) e é empurrada só no eixo Y pelo GSAP
+   (yPercent). Sem transform de centralização aqui: o GSAP gerencia o transform e
+   sobrescreveria um translateX, bagunçando o posicionamento. */
+.parallax__layer-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+}
+
+/* Título "no meio da cena" — herda o empilhamento natural (fica atrás da camada
+   da frente, como no original). */
+.parallax__layer-title {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.parallax__title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-anton), sans-serif;
+  font-size: clamp(2.5rem, 11vw, 9rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-shadow: 0 0.08em 0.5em rgba(0, 0, 0, 0.45);
+}
+
+/* Faixa preta no rodapé + fade (sombra) que dissolve a cena no preto, costurando
+   com a seção de conteúdo abaixo — efeito de continuidade. */
+.parallax__black-line-overflow {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  z-index: 6;
+  width: 100%;
+  height: 6vh;
+  background: #000;
+}
+
+.parallax__fade {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 6;
+  width: 100%;
+  height: 40vh;
+  background: linear-gradient(to bottom, transparent, #000 75%);
+}
+
+.parallax__content {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+  background: #000;
+  color: #fff;
+}
+
+.osmo-icon-svg {
+  width: 3.5rem;
+  height: 3.5rem;
+  color: var(--skybolt);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   3 Dots Loader — "gooey"/metaball (ver components/ui/3-dots-loader.tsx).
+   3 bolinhas sobrepostas no centro que se fundem via filtro SVG (#goo) e se
+   espalham em triângulo a cada ciclo (2s); o container gira no fim do ciclo.
+   Cores saem dos tokens da marca (azul skybolt, kinetic gold, vermelho error).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes dot-3-move {
+  20% {
+    transform: scale(1);
+  }
+  45% {
+    transform: translateY(-18px) scale(0.45);
+  }
+  60% {
+    transform: translateY(-90px) scale(0.45);
+  }
+  80% {
+    transform: translateY(-90px) scale(0.45);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
+
+@keyframes dot-2-move {
+  20% {
+    transform: scale(1);
+  }
+  45% {
+    transform: translate(-16px, 12px) scale(0.45);
+  }
+  60% {
+    transform: translate(-80px, 60px) scale(0.45);
+  }
+  80% {
+    transform: translate(-80px, 60px) scale(0.45);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
+
+@keyframes dot-1-move {
+  20% {
+    transform: scale(1);
+  }
+  45% {
+    transform: translate(16px, 12px) scale(0.45);
+  }
+  60% {
+    transform: translate(80px, 60px) scale(0.45);
+  }
+  80% {
+    transform: translate(80px, 60px) scale(0.45);
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
+
+@keyframes rotate-move {
+  55% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  80% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes index {
+  0%,
+  100% {
+    z-index: 3;
+  }
+  33.3% {
+    z-index: 2;
+  }
+  66.6% {
+    z-index: 1;
+  }
+}
+
+/* Palco do loader: ocupa a faixa abaixo do parallax, fundo preto p/ costurar. */
+.dots-loader-section {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Container centralizado por translate(-50%,-50%) — base que o rotate-move
+   preserva enquanto gira. O filter: url(#goo) é o que funde as bolinhas. */
+.dots-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  filter: url(#goo);
+  animation: rotate-move 2s ease-in-out infinite;
+}
+
+/* Os 3 dots começam exatamente sobrepostos (top/left 0) → goo vê 1 só blob. */
+.dots-loader__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+/* Cada dot: 1 animação de trajetória + 1 de z-index (index) defasada no tempo. */
+.dots-loader__dot--1 {
+  background: var(--skybolt);
+  animation:
+    dot-1-move 2s ease infinite,
+    index 6s ease infinite;
+}
+
+.dots-loader__dot--2 {
+  background: var(--tertiary-container);
+  animation:
+    dot-2-move 2s ease infinite,
+    index 6s -4s ease infinite;
+}
+
+.dots-loader__dot--3 {
+  background: var(--error);
+  animation:
+    dot-3-move 2s ease infinite,
+    index 6s -2s ease infinite;
+}
+
+/* O SVG só carrega a definição do filtro; não deve ocupar espaço visível. */
+.dots-loader__goo {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Loader Progressive Bar (ver components/ui/loader-progressive-bar.tsx).
+   Keyframes movidos do <style jsx> original para o globals (convenção do projeto).
+   Renomeados de loading/blink → loaderbar-* p/ evitar colisão de nomes globais.
+   O componente referencia via utilitários arbitrários: animate-[loaderbar-fill_…].
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes loaderbar-fill {
+  0% {
+    width: 0;
+  }
+  80% {
+    width: 100%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes loaderbar-blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }

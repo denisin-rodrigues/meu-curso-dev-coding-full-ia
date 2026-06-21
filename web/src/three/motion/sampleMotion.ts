@@ -70,6 +70,7 @@ export function samplePulse(pulse: PulseEvent, p: number): number {
 export function sampleMotion(spec: MotionSpec, p: number) {
   return {
     cameraY: sampleScalar(spec.cameraY, p),
+    cameraX: spec.cameraX ? sampleScalar(spec.cameraX, p) : 0,
     ball: sampleTransform(spec.ball, p),
     netScaleY: samplePulse(spec.netPulse, p),
   };

@@ -4,16 +4,8 @@ import { homeContentSchema, type HomeContent } from "@/schemas/content.schema";
 // do schema, o erro aparece já no build/import, nunca silenciosamente.
 const data = {
   hero: {
-    titulo: "DEV CODING FULL IA",
-    subtitulo:
-      "Crie sites premium com animações de alto nível usando IA — mesmo sem ser programador.",
-    cta: "Em breve",
+    titulo: "JORDAN",
   },
-  beats: [
-    "Role a página.",
-    "Cada rolagem é parte do arremesso.",
-    "Este site foi feito com o método que você vai aprender.",
-  ],
   metodo: {
     titulo: "O método em 5 passos",
     passos: [

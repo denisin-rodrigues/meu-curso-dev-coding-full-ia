@@ -19,7 +19,7 @@ gsap.registerPlugin(ScrollTrigger);
 // A trajetória vem do Motion Spec (dado tipado): src/content/shotMotion.ts.
 const BALL_SCALE = 0.12; // bola Ø24cm em escala real (aro Ø42cm interno → passa com folga)
 const HOOP_Y = -3.2; // posição fixa da cesta = "o fim da página"
-const CAM_Z = 2.5;
+const CAM_Z = 2.375; // 5% mais perto → zoom positivo
 
 /** A bola cai pela quadra vertical até a cesta enquanto a câmera desce com o scroll. */
 function ShotScene({ trigger }: { readonly trigger: string }) {
@@ -35,9 +35,19 @@ function ShotScene({ trigger }: { readonly trigger: string }) {
     const apply = (p: number): void => {
       const m = sampleMotion(shotMotion, p);
       camera.position.y = m.cameraY;
+      camera.position.x = m.cameraX;
+
+      // Zoom via câmera Z: mantém o zoom alto (1) até p=0.75, depois tira o zoom (0) em p=0.90 pra caber na cesta
+      const zoomProgress = p < 0.12 ? p / 0.12 : p < 0.75 ? 1 : p < 0.90 ? 1 - (p - 0.75) / 0.15 : 0;
+      camera.position.z = CAM_Z - zoomProgress * 0.7;
+
       b.position.set(m.ball.x, m.ball.y, m.ball.z);
       b.scale.setScalar(BALL_SCALE * m.ball.scale);
       n.scale.y = m.netScaleY;
+
+      // Câmera SEMPRE olha para a bola → bola fica no centro óptico
+      // → ZERO distorção de perspectiva (sem oval).
+      camera.lookAt(m.ball.x, m.ball.y, m.ball.z);
     };
 
     apply(0);

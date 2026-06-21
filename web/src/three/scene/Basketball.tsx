@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { PresentationControls } from "@react-three/drei";
 import type { Mesh } from "three";
 import { basketballConfig } from "@/content/basketball";
 import { useBasketballTextures } from "@/three/materials/basketballTextures";
@@ -18,14 +19,24 @@ export function Basketball() {
   });
 
   return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial
-        map={map}
-        normalMap={normalMap}
-        roughnessMap={roughnessMap}
-        metalness={0}
-      />
-    </mesh>
+    <PresentationControls
+      global={false}
+      cursor={true}
+      snap={false}
+      speed={2}
+      zoom={1}
+      polar={[-Math.PI, Math.PI]}
+      azimuth={[-Infinity, Infinity]}
+    >
+      <mesh ref={ref}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <meshStandardMaterial
+          map={map}
+          normalMap={normalMap}
+          roughnessMap={roughnessMap}
+          metalness={0}
+        />
+      </mesh>
+    </PresentationControls>
   );
 }

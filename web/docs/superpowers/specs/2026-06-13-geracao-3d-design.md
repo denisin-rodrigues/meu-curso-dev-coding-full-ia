@@ -1,5 +1,10 @@
 # Design — Geração 3D por IA (Trilha A: realismo nível Meshy)
 
+> **STATUS: PARADO (2026-06-13).** Requer chave de API + créditos pagos (Meshy/Tripo);
+> a alternativa open-source (TRELLIS) exige GPU. Decisão do autor: descartar a geração
+> paga por enquanto e seguir com o método artesanal (código). Spec mantido como
+> registro de arquitetura para retomar quando houver chave/orçamento.
+
 > Spec de arquitetura. Próximo salto estratégico do lab: gerar objetos 3D por IA
 > (texto/imagem → GLB) e carregá-los na cena animada existente, em vez de modelar
 > tudo à mão. Validado na discussão estratégica de 2026-06-13.
